@@ -3,20 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Oxetane - Chemistry</title>
+  <title>Oxetane - Creatininum Tetrachlorocuprate</title>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#0f1724;
-      --card-bg:#0b1220;
       --muted:#9aa6b2;
       --accent: rgba(255,255,255,0.95);
-      --post-width:320px;
+      --content-max:900px;
+      --footer-h:56px;
       --bevel-percent:3%;
-      --glass: rgba(255,255,255,0.025);
-      --footer-h:56px; /* footer height */
-      --max-width:1100px;
-      --accent-yellow: #ffd66b;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -27,276 +23,106 @@
       color:var(--accent);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:28px 16px  calc(var(--footer-h) + 28px); /* bottom padding so footer won't overlap content */
+      padding:28px 16px calc(var(--footer-h) + 28px);
       display:flex;
       justify-content:center;
     }
 
     .container{
       width:100%;
-      max-width:var(--max-width);
+      max-width:var(--content-max);
     }
 
     header{
       text-align:center;
-      margin-bottom:8px;
+      margin-bottom:12px;
     }
 
-    .title{
+    h1.title{
       font-family: 'Lilita One', cursive;
-      font-size:44px;
-      line-height:1;
-      margin:0;
-      letter-spacing:1px;
+      font-size:40px;
+      margin:0 0 6px 0;
       color:var(--accent);
-      text-shadow: 0 6px 20px rgba(0,0,0,0.6);
     }
     .subtitle{
-      margin-top:6px;
       color:var(--muted);
       font-size:13px;
       letter-spacing:2px;
       text-transform:uppercase;
     }
 
-    /* Scroll-down button */
-    .hero{
-      padding:16px 0 8px 0;
-    }
-    .scroll-down{
+    a.scroll-down{
       display:inline-block;
       margin-top:12px;
       background:transparent;
       border:1px solid rgba(255,255,255,0.06);
       color:var(--muted);
-      padding:8px 14px;
+      padding:8px 12px;
       border-radius:8px;
-      cursor:pointer;
-      transition: all .18s ease;
       text-decoration:none;
     }
-    .scroll-down:hover{transform:translateY(-3px); color:var(--accent)}
 
-    /* Posts area */
-    .posts-wrap{
-      margin-top:18px;
-      position:relative;
-    }
-
-    /* Default: flexible horizontal scroller (good for mid-width) */
-    .posts{
-      display:flex;
-      gap:18px;
-      overflow-x:auto;
-      padding:18px 10px;
-      -webkit-overflow-scrolling:touch;
-      scroll-snap-type: x proximity;
-      scroll-behavior:smooth;
-      align-items:start;
-    }
-
-    /* On wide screens show a responsive grid */
-    @media (min-width:900px){
-      .posts{
-        display:grid;
-        grid-template-columns: repeat(auto-fill, minmax(var(--post-width), 1fr));
-        gap:22px;
-        overflow-x:hidden;
-      }
-    }
-
-    /* On small screens stack vertically for easier tapping & reading */
-    @media (max-width:640px){
-      .posts{
-        display:grid;
-        grid-template-columns: 1fr;
-        gap:14px;
-        overflow-x:hidden;
-        padding:8px 6px;
-      }
-      :root{--post-width:100%}
-    }
-
-    .post{
-      --w:var(--post-width);
-      flex: 0 0 calc(var(--w));
-      scroll-snap-align: start;
-      text-decoration:none;
-      color:inherit;
-      display:block;
-      outline:none;
-    }
-
-    .post-card{
-      background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.01));
+    /* Article / content */
+    .post-article{
+      margin-top:20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      padding:22px;
       border-radius:12px;
-      padding:12px;
-      transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s ease, border-color .2s ease;
-      will-change: transform, box-shadow;
-      position:relative;
-      -webkit-tap-highlight-color: transparent;
+      color:var(--muted);
       border:1px solid rgba(255,255,255,0.03);
       backdrop-filter: blur(6px);
     }
 
-    /* Slight 3D tilt on hover using transform */
-    .post-card-inner{
-      transition: transform .28s cubic-bezier(.2,.9,.2,1);
-      transform-origin:50% 50%;
-    }
-    .post-card:hover .post-card-inner,
-    .post-card:focus-within .post-card-inner {
-      transform: translateY(-8px) rotateX(2deg);
-    }
-
-    /* Thumbnail with 16:9 */
-    .thumb{
-      width:100%;
-      aspect-ratio: 16/9;
-      background:linear-gradient(135deg,#0b1220 0%, #0f2132 100%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      position:relative;
-      overflow:hidden;
-      clip-path: polygon(
-        var(--bevel-percent) 0%, calc(100% - var(--bevel-percent)) 0%, 100% var(--bevel-percent),
-        100% calc(100% - var(--bevel-percent)), calc(100% - var(--bevel-percent)) 100%, var(--bevel-percent) 100%,
-        0% calc(100% - var(--bevel-percent)), 0% var(--bevel-percent)
-      );
-      border:1px solid rgba(255,255,255,0.02);
-    }
-
-    /* On tiny screens make thumbnail slightly shorter to keep cards compact */
-    @media (max-width:420px){
-      .thumb{ aspect-ratio: 4/3; }
-    }
-
-    .thumb .bg{
-      position:absolute; inset:0; background-position:center; background-size:cover; transform:scale(1.16); filter:blur(8px) brightness(.6);
-    }
-    .thumb img.fg{
-      position:relative; width:100%; height:100%; object-fit:contain; max-width:none; z-index:2; pointer-events:none;
-      transform: scale(1.02);
-    }
-    .thumb::after{
-      content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.12)); z-index:3;
-    }
-
-    .caption{
-      margin-top:10px;
-      font-weight:600;
+    .post-article h2{
       color:var(--accent);
-      font-size:15px;
-      line-height:1.35;
-      text-overflow:ellipsis;
-      white-space:normal;
-      overflow:hidden;
+      margin:0 0 12px 0;
+      font-size:20px;
     }
 
-    .meta{
-      margin-top:6px;
+    .reagents{
+      margin:0 0 14px 18px;
+      padding:0;
       color:var(--muted);
-      font-size:13px;
+      font-weight:600;
+    }
+    .reagents li{
+      margin:6px 0;
+      list-style: disc;
     }
 
-    .post-card:hover,
-    .post-card:focus-within,
-    .post-card:active{
-      box-shadow: 0 12px 50px rgba(2,8,23,0.65), 0 0 0 4px rgba(255,255,255,0.04);
-      transform: translateY(-6px);
+    .method{
+      margin-top:8px;
+      line-height:1.55;
+      color:var(--muted);
+      white-space:pre-wrap;
     }
 
-    .post-card{transition: transform .25s ease, box-shadow .25s ease}
-
-    @media (max-width:900px){
-      :root{--post-width:260px}
-      .title{font-size:40px}
+    .links{
+      margin-top:12px;
     }
-    @media (max-width:520px){
-      :root{--post-width:220px}
-      body{padding:18px 10px calc(var(--footer-h) + 18px);}
-      .title{font-size:32px}
-      .subtitle{font-size:12px}
+    .links a{
+      color:var(--accent);
+      text-decoration:underline;
     }
 
-    .post:focus-visible .post-card{
-      box-shadow: 0 12px 50px rgba(2,8,23,0.65), 0 0 0 4px rgba(255,255,255,0.06);
-      transform: translateY(-6px);
+    .credit{
+      margin-top:18px;
+      font-weight:700;
+      color:#ffd66b;
+      letter-spacing:0.6px;
     }
 
-    @media (hover: none){
-      .post-card:active{transform: translateY(-4px)}
+    .disclaimer{
+      margin-top:12px;
+      color:#ffb3b3;
+      font-weight:600;
     }
 
-    .posts::-webkit-scrollbar{height:8px}
-    .posts::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06); border-radius:4px}
-    .posts{scroll-padding-left:18px; scroll-padding-right:18px}
-
-    /* Edge fade overlays to hint extra content */
-    .posts-wrap::before,
-    .posts-wrap::after{
-      content:"";
-      pointer-events:none;
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:74px;
-      z-index:8;
-      transition: opacity .22s ease;
-      opacity:0;
-    }
-    .posts-wrap::before{
-      left:0;
-      background: linear-gradient(90deg, rgba(15,23,36,0.95), rgba(15,23,36,0));
-    }
-    .posts-wrap::after{
-      right:0;
-      background: linear-gradient(270deg, rgba(15,23,36,0.95), rgba(15,23,36,0));
-    }
-    .posts-wrap.has-overflow::before,
-    .posts-wrap.has-overflow::after{ opacity:1; }
-
-    /* Arrow controls */
-    .nav-arrow{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      z-index:9;
-      width:40px;
-      height:40px;
-      border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,0.35);
-      border:1px solid rgba(255,255,255,0.04);
-      cursor:pointer;
-      backdrop-filter: blur(6px);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .18s ease, transform .14s ease;
-    }
-    .nav-arrow svg{ width:16px; height:16px; display:block; }
-    .nav-arrow.left{ left:8px; }
-    .nav-arrow.right{ right:8px; transform:translateY(-50%) rotate(180deg); }
-
-    .posts-wrap.has-overflow .nav-arrow{ opacity:1; pointer-events:auto; }
-    .nav-arrow:active{ transform: translateY(-50%) scale(.96); }
-    .nav-arrow:focus{ outline:3px solid rgba(255,255,255,0.06); }
-
-    /* hide arrows on very small screens where we stack posts */
-    @media (max-width:640px){
-      .nav-arrow{ display:none !important; }
-      .posts-wrap::before, .posts-wrap::after{ display:none !important; }
-    }
-
-    /* Work-in-progress banner under posts */
+    /* Work-in-progress banner */
     .wip-banner{
-      margin:14px 0 4px 0;
+      margin:18px 0 6px 0;
       text-align:center;
-      color: var(--accent-yellow);
+      color: #ffd66b;
       background: linear-gradient(180deg, rgba(255,214,107,0.06), rgba(255,214,107,0.02));
       border:1px solid rgba(255,214,107,0.06);
       display:inline-block;
@@ -307,159 +133,76 @@
       font-size:13px;
     }
 
-    /* Article / synthesis styling */
-    .article{
-      margin-top:24px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      padding:18px; border-radius:12px; color:var(--muted);
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .article h2{ color:var(--accent); margin:0 0 8px 0; font-size:18px; }
-    .article p{ margin:10px 0; line-height:1.5; color:var(--muted); }
-    .article ul{ margin:8px 0 12px 18px; color:var(--muted); }
-    .article ul li{ margin:6px 0; }
-    .article a{ color:var(--accent); text-decoration:underline; }
-
-    .disclaimer{
-      margin-top:12px;
-      color:#ffb3b3;
-      font-weight:700;
-      font-size:13px;
-      line-height:1.4;
-    }
-    .credit-note{
-      margin-top:8px;
-      color:var(--muted);
-      font-weight:700;
-      font-size:13px;
-    }
-
-    /* Footer fixed at bottom -- inner container keeps content aligned to page */
+    /* Footer */
     footer.site-footer{
       position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
+      left:0; right:0; bottom:0;
       height:var(--footer-h);
       display:flex;
       align-items:center;
-      justify-content:center; /* will be overridden by inner container */
+      justify-content:center;
       background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));
       border-top:1px solid rgba(255,255,255,0.03);
       color:var(--muted);
       z-index:30;
       backdrop-filter: blur(6px);
       font-size:13px;
-      letter-spacing:0.6px;
       padding:0 12px;
     }
-
-    /* inner wrapper to align content with main .container and place license at the side */
     .footer-inner{
       width:100%;
-      max-width:var(--max-width);
+      max-width:var(--content-max);
       display:flex;
       align-items:center;
-      justify-content:space-between; /* LICENSE left, (optional) right content on the other side */
+      justify-content:space-between;
     }
-
-    /* On small screens center the footer content */
+    .license{ color:var(--muted); font-weight:700; letter-spacing:0.6px; }
     @media (max-width:640px){
       .footer-inner{ justify-content:center; }
-      .footer-inner .footer-right{ display:none; } /* hide right-side on small screens for neatness */
+      .license{ text-align:center; }
+      .post-article{ padding:16px; }
+      h1.title{ font-size:34px; }
     }
-
-    .footer-inner .license{
-      color:var(--muted);
-      font-weight:700;
-      letter-spacing:0.6px;
-    }
-
-    .footer-inner .footer-right{
-      color:var(--muted);
-      font-size:13px;
-      opacity:0.9;
-    }
-
   </style>
 </head>
 <body>
   <div class="container">
-    <header class="hero">
-      <h1 class="title">Oxetane</h1>
-      <div class="subtitle">Chemistry</div>
-
-      <div style="margin-top:10px;">
-        <a class="scroll-down" href="#posts">Scroll to posts ↓</a>
-      </div>
+    <header>
+      <h1 class="title">Oxetane - Chemistry</h1>
+      <div class="subtitle">Creatinine Tetrachlorocuprate - Synthesis Notes</div>
+      <div style="margin-top:8px;"><a class="scroll-down" href="#article">Read details ↓</a></div>
     </header>
 
-    <main class="posts-wrap" id="postsWrap">
-      <!-- left arrow -->
-      <button class="nav-arrow left" id="navLeft" aria-label="Scroll left" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
+    <main id="article">
+      <div class="post-article" role="article">
+        <h2>Reagents:</h2>
 
-      <section id="posts" class="posts" aria-label="Recent posts">
-        <!-- Single requested post -->
-        <a href="/creatininetetrachlorocuprate/" class="post" aria-label="Creatinine Tetrachlorocuprate">
-          <div class="post-card" tabindex="0">
-            <div class="post-card-inner">
-              <div class="thumb" role="img" aria-label="Creatinine Tetrachlorocuprate thumbnail">
-                <div class="bg" style="background-image: url('https://i.imgur.com/8v1i5eT.jpeg')"></div>
-                <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="Creatinine Tetrachlorocuprate thumbnail" />
-              </div>
-              <div class="caption">Creatinine Tetrachlorocuprate</div>
-              <div class="meta" aria-hidden="true">Click to open</div>
-            </div>
-          </div>
-        </a>
-
-        <!-- Add more posts here if you want -->
-      </section>
-
-      <!-- visible work-in-progress note under the posts -->
-      <div style="display:flex; justify-content:center;">
-        <div class="wip-banner" role="status">THIS SITE IS STILL WORK IN PROGRESS</div>
-      </div>
-
-      <!-- right arrow -->
-      <button class="nav-arrow right" id="navRight" aria-label="Scroll right" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-
-      <!-- NEW: Synthesis / Home page content inserted here -->
-      <article class="article" aria-labelledby="synth-heading" style="margin-top:18px; width:100%;">
-        <h2 id="synth-heading">Reagents:</h2>
-
-        <ul>
+        <ul class="reagents">
           <li>8.27g Creatinine Hydrochloride</li>
           <li>3.72g Coppee(II) Chloride (Anhydrous)</li>
           <li>Distilled Water</li>
           <li>Acetone (Required)</li>
         </ul>
 
-        <p>The creatinine hydrochloride was dissolved in 40 mL of distilled water, and once the solution became completely clear, the copper(II) chloride was added as a dry powder. The mixture was then heated to 80-100°C, during which the solution's color gradually changed from light green to dark green and eventually to nearly black. When the volume had reduced to about 20 mL, the temperature was lowered to approximately 70°C.</p>
+        <div class="method">
+The creatinine hydrochloride was dissolved in 40 mL of distilled water, and once the solution became completely clear, the copper(II) chloride was added as a dry powder. The mixture was then heated to 80-100°C, during which the solution's color gradually changed from light green to dark green and eventually to nearly black. When the volume had reduced to about 20 mL, the temperature was lowered to approximately 70°C. As the solution concentrated further to around 10-15 mL, it thickened into a viscous black tar and began releasing hydrogen chloride gas. At this stage, 75 mL of anhydrous acetone was added, which immediately precipitated bright green creatininium tetrachlorocuprate while the acetone phase turned orange. The mixture was filtered, and the resulting wet solid was dried for several hours at 40 °C. Overheating should be avoided, as it causes decomposition into a black tar (if this occurs, adding more acetone can restore the green compound). After drying, the product was stored. The yield was approximately 40% (4.7 g).
+        </div>
 
-        <p>As the solution concentrated further to around 10-15 mL, it thickened into a viscous black tar and began releasing hydrogen chloride gas. At this stage, 75 mL of anhydrous acetone was added, which immediately precipitated bright green creatininium tetrachlorocuprate while the acetone phase turned orange. The mixture was filtered, and the resulting wet solid was dried for several hours at 40 °C. Overheating should be avoided, as it causes decomposition into a black tar (if this occurs, adding more acetone can restore the green compound). After drying, the product was stored. The yield was approximately 40% (4.7 g).</p>
+        <div class="links">
+          <div>Video link (YouTube): <a href="https://www.youtube.com/watch?v=4_QkSauuHY8&t=5s" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=4_QkSauuHY8&t=5s</a></div>
+          <div>Adapted from: <a href="https://www.sciencemadness.org/whisper/viewthread.php?tid=156157" target="_blank" rel="noopener noreferrer">ScienceMadness thread</a></div>
+        </div>
 
-        <p>You can find a link for the synthesis on YouTube: <a href="https://www.youtube.com/watch?v=4_QkSauuHY8&amp;t=5s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=4_QkSauuHY8&amp;t=5s</a></p>
+        <div class="credit">Feel Free To Use But Crediting (To @OxetaneChem On YouTube) Is Highly Appreciated</div>
+        <div class="disclaimer">I am not responsible for any injury, damage, or consequences that may result from attempting to copy what you see here.</div>
+      </div>
 
-        <p>The synthesis was adapted from the sciencemadness thread: <a href="https://www.sciencemadness.org/whisper/viewthread.php?tid=156157" target="_blank" rel="noopener">https://www.sciencemadness.org/whisper/viewthread.php?tid=156157</a></p>
-
-        <p class="credit-note">Feel Free To Use But Crediting (To @OxetaneChem On YouTube) Is Highly Appreciated</p>
-
-        <p class="disclaimer">I am not responsible for any injury, damage, or consequences that may result from attempting to copy what you see here.</p>
-      </article>
-
+      <div style="display:flex; justify-content:center;">
+        <div class="wip-banner" role="status">THIS SITE IS STILL WORK IN PROGRESS</div>
+      </div>
     </main>
-
-    <!-- optional article area (kept hidden by default) -->
-    <!-- (not needed now that the synthesis is shown above) -->
-
   </div>
 
-  <!-- persistent bottom footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-inner">
       <div class="license">LICENSE: MIT</div>
@@ -476,50 +219,6 @@
         if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
       });
     });
-
-    // Show overlays and nav arrows only when posts overflow horizontally.
-    (function(){
-      const wrap = document.getElementById('postsWrap');
-      const posts = document.getElementById('posts');
-      const leftBtn = document.getElementById('navLeft');
-      const rightBtn = document.getElementById('navRight');
-
-      function updateOverflow(){
-        const isOverflowing = posts.scrollWidth > posts.clientWidth + 1;
-        if(isOverflowing){
-          wrap.classList.add('has-overflow');
-          leftBtn.hidden = false;
-          rightBtn.hidden = false;
-        } else {
-          wrap.classList.remove('has-overflow');
-          leftBtn.hidden = true;
-          rightBtn.hidden = true;
-        }
-        updateArrowsState();
-      }
-
-      function updateArrowsState(){
-        if(posts.scrollLeft <= 4) leftBtn.disabled = true; else leftBtn.disabled = false;
-        if(posts.scrollLeft + posts.clientWidth >= posts.scrollWidth - 4) rightBtn.disabled = true; else rightBtn.disabled = false;
-      }
-
-      function scrollByDirection(dir){
-        const step = Math.round((parseInt(getComputedStyle(document.documentElement).getPropertyValue('--post-width')) || 300) * 0.9);
-        posts.scrollBy({left: dir * step, behavior: 'smooth'});
-      }
-
-      leftBtn.addEventListener('click', ()=> scrollByDirection(-1));
-      rightBtn.addEventListener('click', ()=> scrollByDirection(1));
-      posts.addEventListener('scroll', updateArrowsState);
-
-      let resizeTimer;
-      function onResize(){ clearTimeout(resizeTimer); resizeTimer = setTimeout(updateOverflow, 120); }
-      window.addEventListener('resize', onResize);
-
-      window.addEventListener('load', updateOverflow);
-      setTimeout(updateOverflow, 500);
-      posts.querySelectorAll('img').forEach(img => img.addEventListener('load', updateOverflow));
-    })();
   </script>
 </body>
 </html>
