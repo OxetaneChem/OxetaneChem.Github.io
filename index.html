@@ -15,6 +15,7 @@
       --bevel-percent:3%;
       --glass: rgba(255,255,255,0.025);
       --footer-h:56px; /* footer height */
+      --mit-red: #a31f34;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -25,7 +26,7 @@
       color:var(--accent);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:28px 16px  calc(var(--footer-h) + 28px); /* bottom padding so footer won't overlap content */
+      padding:28px 16px  calc(var(--footer-h) + 28px);
       display:flex;
       justify-content:center;
     }
@@ -38,6 +39,15 @@
     header{
       text-align:center;
       margin-bottom:8px;
+    }
+
+    /* Title row with MIT badge to the right */
+    .title-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
     }
 
     .title{
@@ -56,6 +66,31 @@
       letter-spacing:2px;
       text-transform:uppercase;
     }
+
+    /* MIT badge */
+    .mit-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 8px;
+      border-radius:8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      text-decoration:none;
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+      transition: transform .12s ease, box-shadow .12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mit-badge:hover{ transform: translateY(-3px); color:var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+    .mit-logo {
+      width:40px;
+      height:24px;
+      display:inline-block;
+      flex: 0 0 auto;
+    }
+    .mit-text{ font-size:12px; color:var(--muted); }
 
     /* Scroll-down button */
     .hero{
@@ -331,13 +366,33 @@
       padding:16px; border-radius:12px; color:var(--muted);
     }
 
+    /* responsive sizing for MIT logo */
+    @media (max-width:520px){
+      .mit-badge{ padding:6px; gap:6px; }
+      .mit-logo{ width:34px; height:20px; }
+      .mit-text{ display:none; } /* hide text on tiny screens to save space */
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header class="hero">
-      <h1 class="title">Oxetane</h1>
-      <div class="subtitle">Chemistry</div>
+      <div class="title-row" aria-hidden="false">
+        <div>
+          <h1 class="title">Oxetane</h1>
+          <div class="subtitle">Chemistry</div>
+        </div>
+
+        <!-- MIT badge to the side - links to MIT license page -->
+        <a class="mit-badge" href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" aria-label="MIT License">
+          <!-- simple MIT-style badge SVG (stylized, unobtrusive) -->
+          <svg class="mit-logo" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <rect x="2" y="6" width="116" height="48" rx="6" fill="rgba(255,255,255,0.03)"></rect>
+            <text x="20" y="40" font-family="Inter, Arial, Helvetica, sans-serif" font-weight="700" font-size="34" fill="var(--mit-red)">MIT</text>
+          </svg>
+          <span class="mit-text">MIT</span>
+        </a>
+      </div>
 
       <div style="margin-top:10px;">
         <a class="scroll-down" href="#posts">Scroll to posts ↓</a>
