@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Oxetane — Chemistry</title>
+  <title>Oxetane - Chemistry</title>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -24,7 +24,7 @@
       color:var(--accent);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:32px 20px;
+      padding:28px 16px;
       display:flex;
       justify-content:center;
     }
@@ -39,9 +39,31 @@
       margin-bottom:8px;
     }
 
+    .title-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+
+    .logo-mark{
+      width:44px;
+      height:44px;
+      border-radius:9px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      font-weight:700;
+      font-size:18px;
+      color:var(--accent);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+
     .title{
       font-family: 'Lilita One', cursive;
-      font-size:48px;
+      font-size:44px;
       line-height:1;
       margin:0;
       letter-spacing:1px;
@@ -51,14 +73,14 @@
     .subtitle{
       margin-top:6px;
       color:var(--muted);
-      font-size:14px;
+      font-size:13px;
       letter-spacing:2px;
       text-transform:uppercase;
     }
 
     /* Scroll-down button */
     .hero{
-      padding:18px 0 18px 0;
+      padding:16px 0 8px 0;
     }
     .scroll-down{
       display:inline-block;
@@ -80,7 +102,7 @@
       position:relative;
     }
 
-    /* Horizontal scroller for narrow screens, grid for wider */
+    /* Default: flexible horizontal scroller (good for mid-width) */
     .posts{
       display:flex;
       gap:18px;
@@ -92,7 +114,7 @@
       align-items:start;
     }
 
-    /* When screen is wide enough show a responsive grid instead */
+    /* On wide screens show a responsive grid */
     @media (min-width:900px){
       .posts{
         display:grid;
@@ -100,6 +122,18 @@
         gap:22px;
         overflow-x:hidden;
       }
+    }
+
+    /* On small screens stack vertically for easier tapping & reading */
+    @media (max-width:640px){
+      .posts{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap:14px;
+        overflow-x:hidden;
+        padding:8px 6px;
+      }
+      :root{--post-width:100%}
     }
 
     .post{
@@ -115,7 +149,7 @@
     .post-card{
       background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.01));
       border-radius:12px;
-      padding:10px;
+      padding:12px;
       transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s ease, border-color .2s ease;
       will-change: transform, box-shadow;
       position:relative;
@@ -134,7 +168,7 @@
       transform: translateY(-8px) rotateX(2deg);
     }
 
-    /* Thumbnail with YouTube-like aspect ratio 16:9 */
+    /* Thumbnail with 16:9 */
     .thumb{
       width:100%;
       aspect-ratio: 16/9;
@@ -153,7 +187,11 @@
       border:1px solid rgba(255,255,255,0.02);
     }
 
-    /* Background blurred clone */
+    /* On tiny screens make thumbnail slightly shorter to keep cards compact */
+    @media (max-width:420px){
+      .thumb{ aspect-ratio: 4/3; }
+    }
+
     .thumb .bg{
       position:absolute; inset:0; background-position:center; background-size:cover; transform:scale(1.16); filter:blur(8px) brightness(.6);
     }
@@ -170,10 +208,16 @@
       font-weight:600;
       color:var(--accent);
       font-size:15px;
-      line-height:1.2;
+      line-height:1.35;
       text-overflow:ellipsis;
-      white-space:nowrap;
+      white-space:normal;
       overflow:hidden;
+    }
+
+    .meta{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
     }
 
     .post-card:hover,
@@ -191,10 +235,11 @@
     }
     @media (max-width:520px){
       :root{--post-width:220px}
-      body{padding:20px 12px}
-      .title{font-size:34px}
+      body{padding:18px 10px}
+      .title{font-size:32px}
       .subtitle{font-size:12px}
       .posts{gap:12px}
+      .logo-mark{width:40px;height:40px;font-size:16px;border-radius:8px;}
     }
 
     .post:focus-visible .post-card{
@@ -231,11 +276,10 @@
       right:0;
       background: linear-gradient(270deg, rgba(15,23,36,0.95), rgba(15,23,36,0));
     }
-    /* show overlays only when posts overflow (set via JS class) */
     .posts-wrap.has-overflow::before,
     .posts-wrap.has-overflow::after{ opacity:1; }
 
-    /* Arrow controls that show when overflow exists */
+    /* Arrow controls */
     .nav-arrow{
       position:absolute;
       top:50%;
@@ -260,36 +304,20 @@
     .nav-arrow.right{ right:8px; transform:translateY(-50%) rotate(180deg); }
 
     .posts-wrap.has-overflow .nav-arrow{ opacity:1; pointer-events:auto; }
-
     .nav-arrow:active{ transform: translateY(-50%) scale(.96); }
-
-    /* small subtle shimmer on the site title (not flashy) */
-    .title::after{
-      content:"⌬"; /* user loves benzene symbol as super "!" */
-      margin-left:8px;
-      color: rgba(255,255,255,0.9);
-      font-size:18px;
-      vertical-align:middle;
-      display:inline-block;
-      transform:translateY(-2px);
-      opacity:.9;
-    }
-
-    /* small article area styling (you can re-add content here later) */
-    .article{
-      margin-top:32px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      padding:18px; border-radius:12px; color:var(--muted);
-    }
-
-    /* keyboard-friendly */
     .nav-arrow:focus{ outline:3px solid rgba(255,255,255,0.06); }
 
-    /* reduce overlay size on mobile */
-    @media (max-width:520px){
-      .posts-wrap::before,
-      .posts-wrap::after{ width:36px; }
-      .nav-arrow{ width:36px; height:36px; border-radius:8px; }
+    /* hide arrows on very small screens where we stack posts */
+    @media (max-width:640px){
+      .nav-arrow{ display:none !important; }
+      .posts-wrap::before, .posts-wrap::after{ display:none !important; }
+    }
+
+    /* small article area in case you want content later */
+    .article{
+      margin-top:24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      padding:16px; border-radius:12px; color:var(--muted);
     }
 
   </style>
@@ -297,9 +325,15 @@
 <body>
   <div class="container">
     <header class="hero">
-      <h1 class="title">Oxetane</h1>
-      <div class="subtitle">Chemistry</div>
-      <div>
+      <div class="title-row">
+        <div class="logo-mark" aria-hidden="true">O</div>
+        <div>
+          <h1 class="title">Oxetane</h1>
+          <div class="subtitle">Chemistry</div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
         <a class="scroll-down" href="#posts">Scroll to posts ↓</a>
       </div>
     </header>
@@ -320,24 +354,12 @@
                 <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="Creatinine Tetrachlorocuprate thumbnail" />
               </div>
               <div class="caption">Creatinine Tetrachlorocuprate</div>
+              <div class="meta" aria-hidden="true">Click to open</div>
             </div>
           </div>
         </a>
 
-        <!-- Example: duplicate that post to make scrolling visible — remove / replace as needed -->
-        <!--
-        <a class="post" href="#">
-          <div class="post-card" tabindex="0">
-            <div class="post-card-inner">
-              <div class="thumb" role="img" aria-label="Example thumbnail">
-                <div class="bg" style="background-image: url('https://i.imgur.com/8v1i5eT.jpeg')"></div>
-                <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="" />
-              </div>
-              <div class="caption">Another post</div>
-            </div>
-          </div>
-        </a>
-        -->
+        <!-- You can add more posts here; on mobile they'll stack vertically -->
       </section>
 
       <!-- right arrow -->
@@ -346,7 +368,7 @@
       </button>
     </main>
 
-    <!-- kept a small article area in case you want content later; remove entirely if unused -->
+    <!-- optional article area (kept hidden by default) -->
     <div class="article" id="below" style="display:none;">
       <p style="margin:8px 0 0 0; color:var(--muted)">Click the thumbnail to open the post page.</p>
     </div>
@@ -363,7 +385,7 @@
       });
     });
 
-    // Show edge overlays and nav arrows only when posts overflow horizontally.
+    // Show overlays and nav arrows only when posts overflow horizontally.
     (function(){
       const wrap = document.getElementById('postsWrap');
       const posts = document.getElementById('posts');
@@ -371,7 +393,6 @@
       const rightBtn = document.getElementById('navRight');
 
       function updateOverflow(){
-        // On wide screens we switch to grid and disable scroll arrows if no overflow
         const isOverflowing = posts.scrollWidth > posts.clientWidth + 1;
         if(isOverflowing){
           wrap.classList.add('has-overflow');
@@ -386,12 +407,10 @@
       }
 
       function updateArrowsState(){
-        // disable left if at the left end, disable right if at the right end
         if(posts.scrollLeft <= 4) leftBtn.disabled = true; else leftBtn.disabled = false;
         if(posts.scrollLeft + posts.clientWidth >= posts.scrollWidth - 4) rightBtn.disabled = true; else rightBtn.disabled = false;
       }
 
-      // Scroll by card width (or sensible fallback)
       function scrollByDirection(dir){
         const step = Math.round((parseInt(getComputedStyle(document.documentElement).getPropertyValue('--post-width')) || 300) * 0.9);
         posts.scrollBy({left: dir * step, behavior: 'smooth'});
@@ -401,16 +420,12 @@
       rightBtn.addEventListener('click', ()=> scrollByDirection(1));
       posts.addEventListener('scroll', updateArrowsState);
 
-      // Re-check on load and when window resizes (debounce)
       let resizeTimer;
       function onResize(){ clearTimeout(resizeTimer); resizeTimer = setTimeout(updateOverflow, 120); }
       window.addEventListener('resize', onResize);
 
-      // initial check
       window.addEventListener('load', updateOverflow);
-      // also run periodically for dynamic content if images load later
       setTimeout(updateOverflow, 500);
-      // run when images load inside posts too
       posts.querySelectorAll('img').forEach(img => img.addEventListener('load', updateOverflow));
     })();
   </script>
