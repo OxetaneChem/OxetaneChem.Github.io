@@ -7,12 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0f1724; /* dark but not black */
+      --bg:#0f1724;
       --card-bg:#0b1220;
       --muted:#9aa6b2;
       --accent: rgba(255,255,255,0.95);
-      --post-width:320px; /* desktop card width */
+      --post-width:320px;
       --bevel-percent:3%;
+      --glass: rgba(255,255,255,0.025);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -61,23 +62,25 @@
     }
     .scroll-down{
       display:inline-block;
-      margin-top:16px;
+      margin-top:12px;
       background:transparent;
       border:1px solid rgba(255,255,255,0.06);
       color:var(--muted);
       padding:8px 14px;
       border-radius:8px;
       cursor:pointer;
-      transition: all .2s ease;
+      transition: all .18s ease;
       text-decoration:none;
     }
-    .scroll-down:hover{transform:translateY(-4px); color:var(--accent)}
+    .scroll-down:hover{transform:translateY(-3px); color:var(--accent)}
 
-    /* Posts line */
+    /* Posts area */
     .posts-wrap{
-      margin-top:22px;
+      margin-top:18px;
+      position:relative;
     }
 
+    /* Horizontal scroller for narrow screens, grid for wider */
     .posts{
       display:flex;
       gap:18px;
@@ -85,6 +88,18 @@
       padding:18px 10px;
       -webkit-overflow-scrolling:touch;
       scroll-snap-type: x proximity;
+      scroll-behavior:smooth;
+      align-items:start;
+    }
+
+    /* When screen is wide enough show a responsive grid instead */
+    @media (min-width:900px){
+      .posts{
+        display:grid;
+        grid-template-columns: repeat(auto-fill, minmax(var(--post-width), 1fr));
+        gap:22px;
+        overflow-x:hidden;
+      }
     }
 
     .post{
@@ -98,13 +113,25 @@
     }
 
     .post-card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:10px;
+      background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.01));
+      border-radius:12px;
       padding:10px;
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s ease, border-color .2s ease;
       will-change: transform, box-shadow;
       position:relative;
       -webkit-tap-highlight-color: transparent;
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+
+    /* Slight 3D tilt on hover using transform */
+    .post-card-inner{
+      transition: transform .28s cubic-bezier(.2,.9,.2,1);
+      transform-origin:50% 50%;
+    }
+    .post-card:hover .post-card-inner,
+    .post-card:focus-within .post-card-inner {
+      transform: translateY(-8px) rotateX(2deg);
     }
 
     /* Thumbnail with YouTube-like aspect ratio 16:9 */
@@ -118,24 +145,22 @@
       color:var(--muted);
       position:relative;
       overflow:hidden;
-      /* beveled corners via clip-path */
       clip-path: polygon(
         var(--bevel-percent) 0%, calc(100% - var(--bevel-percent)) 0%, 100% var(--bevel-percent),
         100% calc(100% - var(--bevel-percent)), calc(100% - var(--bevel-percent)) 100%, var(--bevel-percent) 100%,
         0% calc(100% - var(--bevel-percent)), 0% var(--bevel-percent)
       );
+      border:1px solid rgba(255,255,255,0.02);
     }
 
     /* Background blurred clone */
     .thumb .bg{
-      position:absolute; inset:0; background-position:center; background-size:cover; transform:scale(1.18); filter:blur(8px) brightness(.65);
+      position:absolute; inset:0; background-position:center; background-size:cover; transform:scale(1.16); filter:blur(8px) brightness(.6);
     }
-    /* Foreground image centered and covering important area */
     .thumb img.fg{
       position:relative; width:100%; height:100%; object-fit:contain; max-width:none; z-index:2; pointer-events:none;
       transform: scale(1.02);
     }
-    /* Slight dark overlay to improve text contrast */
     .thumb::after{
       content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.12)); z-index:3;
     }
@@ -151,12 +176,11 @@
       overflow:hidden;
     }
 
-    /* Hover / focus outline and fade */
     .post-card:hover,
     .post-card:focus-within,
     .post-card:active{
+      box-shadow: 0 12px 50px rgba(2,8,23,0.65), 0 0 0 4px rgba(255,255,255,0.04);
       transform: translateY(-6px);
-      box-shadow: 0 8px 30px rgba(2,8,23,0.6), 0 0 0 3px rgba(255,255,255,0.95);
     }
 
     .post-card{transition: transform .25s ease, box-shadow .25s ease}
@@ -174,7 +198,7 @@
     }
 
     .post:focus-visible .post-card{
-      box-shadow: 0 8px 30px rgba(2,8,23,0.6), 0 0 0 3px rgba(255,255,255,0.95);
+      box-shadow: 0 12px 50px rgba(2,8,23,0.65), 0 0 0 4px rgba(255,255,255,0.06);
       transform: translateY(-6px);
     }
 
@@ -184,12 +208,88 @@
 
     .posts::-webkit-scrollbar{height:8px}
     .posts::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06); border-radius:4px}
+    .posts{scroll-padding-left:18px; scroll-padding-right:18px}
 
-    /* Simple responsive container for main article area after scroll */
+    /* Edge fade overlays to hint extra content */
+    .posts-wrap::before,
+    .posts-wrap::after{
+      content:"";
+      pointer-events:none;
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:74px;
+      z-index:8;
+      transition: opacity .22s ease;
+      opacity:0;
+    }
+    .posts-wrap::before{
+      left:0;
+      background: linear-gradient(90deg, rgba(15,23,36,0.95), rgba(15,23,36,0));
+    }
+    .posts-wrap::after{
+      right:0;
+      background: linear-gradient(270deg, rgba(15,23,36,0.95), rgba(15,23,36,0));
+    }
+    /* show overlays only when posts overflow (set via JS class) */
+    .posts-wrap.has-overflow::before,
+    .posts-wrap.has-overflow::after{ opacity:1; }
+
+    /* Arrow controls that show when overflow exists */
+    .nav-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:9;
+      width:40px;
+      height:40px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.04);
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .14s ease;
+    }
+    .nav-arrow svg{ width:16px; height:16px; display:block; }
+    .nav-arrow.left{ left:8px; }
+    .nav-arrow.right{ right:8px; transform:translateY(-50%) rotate(180deg); }
+
+    .posts-wrap.has-overflow .nav-arrow{ opacity:1; pointer-events:auto; }
+
+    .nav-arrow:active{ transform: translateY(-50%) scale(.96); }
+
+    /* small subtle shimmer on the site title (not flashy) */
+    .title::after{
+      content:"⌬"; /* user loves benzene symbol as super "!" */
+      margin-left:8px;
+      color: rgba(255,255,255,0.9);
+      font-size:18px;
+      vertical-align:middle;
+      display:inline-block;
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    /* small article area styling (you can re-add content here later) */
     .article{
-      margin-top:48px;
+      margin-top:32px;
       background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      padding:22px; border-radius:12px; color:var(--muted);
+      padding:18px; border-radius:12px; color:var(--muted);
+    }
+
+    /* keyboard-friendly */
+    .nav-arrow:focus{ outline:3px solid rgba(255,255,255,0.06); }
+
+    /* reduce overlay size on mobile */
+    @media (max-width:520px){
+      .posts-wrap::before,
+      .posts-wrap::after{ width:36px; }
+      .nav-arrow{ width:36px; height:36px; border-radius:8px; }
     }
 
   </style>
@@ -204,35 +304,57 @@
       </div>
     </header>
 
-    <main class="posts-wrap">
-      <section id="posts" class="posts" aria-label="Recent posts">
+    <main class="posts-wrap" id="postsWrap">
+      <!-- left arrow -->
+      <button class="nav-arrow left" id="navLeft" aria-label="Scroll left" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
 
+      <section id="posts" class="posts" aria-label="Recent posts">
         <!-- Single requested post -->
         <a href="/creatininetetrachlorocuprate/" class="post" aria-label="Creatinine Tetrachlorocuprate">
-          <div class="post-card">
-            <div class="thumb" role="img" aria-label="Creatinine Tetrachlorocuprate thumbnail">
-              <div class="bg" style="background-image: url('https://i.imgur.com/8v1i5eT.jpeg')"></div>
-              <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="Creatinine Tetrachlorocuprate thumbnail" />
+          <div class="post-card" tabindex="0">
+            <div class="post-card-inner">
+              <div class="thumb" role="img" aria-label="Creatinine Tetrachlorocuprate thumbnail">
+                <div class="bg" style="background-image: url('https://i.imgur.com/8v1i5eT.jpeg')"></div>
+                <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="Creatinine Tetrachlorocuprate thumbnail" />
+              </div>
+              <div class="caption">Creatinine Tetrachlorocuprate</div>
             </div>
-            <div class="caption">Creatinine Tetrachlorocuprate</div>
           </div>
         </a>
 
+        <!-- Example: duplicate that post to make scrolling visible — remove / replace as needed -->
+        <!--
+        <a class="post" href="#">
+          <div class="post-card" tabindex="0">
+            <div class="post-card-inner">
+              <div class="thumb" role="img" aria-label="Example thumbnail">
+                <div class="bg" style="background-image: url('https://i.imgur.com/8v1i5eT.jpeg')"></div>
+                <img class="fg" src="https://i.imgur.com/8v1i5eT.jpeg" alt="" />
+              </div>
+              <div class="caption">Another post</div>
+            </div>
+          </div>
+        </a>
+        -->
       </section>
 
-      <div style="margin-top:16px; text-align:center; color:var(--muted); font-size:13px">Swipe → or scroll to see more posts</div>
-
-      <!-- Example article area below posts to demonstrate scroll target -->
-      <div class="article" id="below">
-        <strong>Latest:</strong>
-        <p style="margin:8px 0 0 0; color:var(--muted)">Click the thumbnail to open the post page.</p>
-      </div>
-
+      <!-- right arrow -->
+      <button class="nav-arrow right" id="navRight" aria-label="Scroll right" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
     </main>
+
+    <!-- kept a small article area in case you want content later; remove entirely if unused -->
+    <div class="article" id="below" style="display:none;">
+      <p style="margin:8px 0 0 0; color:var(--muted)">Click the thumbnail to open the post page.</p>
+    </div>
+
   </div>
 
   <script>
-    // Smooth scroll for the scroll-down link
+    // Smooth scroll for internal links
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', function(e){
         e.preventDefault();
@@ -240,6 +362,57 @@
         if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
       });
     });
+
+    // Show edge overlays and nav arrows only when posts overflow horizontally.
+    (function(){
+      const wrap = document.getElementById('postsWrap');
+      const posts = document.getElementById('posts');
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+
+      function updateOverflow(){
+        // On wide screens we switch to grid and disable scroll arrows if no overflow
+        const isOverflowing = posts.scrollWidth > posts.clientWidth + 1;
+        if(isOverflowing){
+          wrap.classList.add('has-overflow');
+          leftBtn.hidden = false;
+          rightBtn.hidden = false;
+        } else {
+          wrap.classList.remove('has-overflow');
+          leftBtn.hidden = true;
+          rightBtn.hidden = true;
+        }
+        updateArrowsState();
+      }
+
+      function updateArrowsState(){
+        // disable left if at the left end, disable right if at the right end
+        if(posts.scrollLeft <= 4) leftBtn.disabled = true; else leftBtn.disabled = false;
+        if(posts.scrollLeft + posts.clientWidth >= posts.scrollWidth - 4) rightBtn.disabled = true; else rightBtn.disabled = false;
+      }
+
+      // Scroll by card width (or sensible fallback)
+      function scrollByDirection(dir){
+        const step = Math.round((parseInt(getComputedStyle(document.documentElement).getPropertyValue('--post-width')) || 300) * 0.9);
+        posts.scrollBy({left: dir * step, behavior: 'smooth'});
+      }
+
+      leftBtn.addEventListener('click', ()=> scrollByDirection(-1));
+      rightBtn.addEventListener('click', ()=> scrollByDirection(1));
+      posts.addEventListener('scroll', updateArrowsState);
+
+      // Re-check on load and when window resizes (debounce)
+      let resizeTimer;
+      function onResize(){ clearTimeout(resizeTimer); resizeTimer = setTimeout(updateOverflow, 120); }
+      window.addEventListener('resize', onResize);
+
+      // initial check
+      window.addEventListener('load', updateOverflow);
+      // also run periodically for dynamic content if images load later
+      setTimeout(updateOverflow, 500);
+      // run when images load inside posts too
+      posts.querySelectorAll('img').forEach(img => img.addEventListener('load', updateOverflow));
+    })();
   </script>
 </body>
 </html>
